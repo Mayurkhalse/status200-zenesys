@@ -15,6 +15,8 @@ class SoftVotingEnsemble:
         
         for name, model in self.models_dict.items():
             X = X_dict[name]
+            if not hasattr(model, "multi_class"):
+                setattr(model, "multi_class", "auto")
             probs = model.predict_proba(X)
             w = self.weights.get(name, 1.0)
             

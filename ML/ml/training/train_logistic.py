@@ -48,6 +48,7 @@ def main():
     print(f"Training Logistic Regression with params: {params}...")
     model = LogisticRegression(**params)
     model.fit(X_train, y_train)
+    model.multi_class = "auto"
 
     val_preds = model.predict(X_val)
     acc = accuracy_score(y_val, val_preds)

@@ -47,6 +47,9 @@ def predict_document(file_path: str, artifacts: dict = None) -> dict:
     X_sparse = hstack([tfidf_vec, emb_vec]).tocsr()
     X_full = np.hstack([tfidf_vec.toarray(), emb_vec, dom_vec, stat_vec, lay_vec])
 
+    if not hasattr(model, "multi_class"):
+        setattr(model, "multi_class", "auto")
+
     # Handle model prediction
     if hasattr(model, "predict_proba"):
         if hasattr(model, "models_dict"):
