@@ -25,6 +25,8 @@ export default function RecordsList({ globalSearch = '', setGlobalSearch }) {
 
   useEffect(() => {
     fetchRecords();
+    const interval = setInterval(fetchRecords, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleSeedData = async () => {
@@ -142,6 +144,10 @@ export default function RecordsList({ globalSearch = '', setGlobalSearch }) {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <button onClick={fetchRecords} className="btn-erp-action" style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+              <span>Refresh Records</span>
+            </button>
             <span style={{ fontSize: '0.78rem', background: '#e0f2fe', color: '#0369a1', padding: '0.3rem 0.6rem', borderRadius: '6px', fontWeight: '600', border: '1px solid #bae6fd', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0284c7' }}></span>
               Oracle NetSuite SuiteTalk TBA
