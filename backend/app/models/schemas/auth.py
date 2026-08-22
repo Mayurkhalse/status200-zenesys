@@ -5,7 +5,7 @@ class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str
     full_name: str
-    role: Optional[str] = "viewer"
+    role: Optional[str] = "analyst"
 
 class UserLoginRequest(BaseModel):
     email: EmailStr

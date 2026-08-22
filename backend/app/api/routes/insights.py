@@ -21,6 +21,12 @@ async def list_insights(
 ):
     db = get_mongo_db()
     query = {}
+
+    if current_user.role != "admin":
+        user_id_val = ObjectId(current_user.user_id) if ObjectId.is_valid(current_user.user_id) else current_user.user_id
+        user_doc_ids = await db.documents.distinct("_id", {"uploaded_by": user_id_val, "is_deleted": False})
+        query["related_document_ids"] = {"$in": user_doc_ids}
+
     if type:
         query["type"] = type
     if severity:

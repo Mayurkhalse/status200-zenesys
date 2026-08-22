@@ -81,4 +81,5 @@ yarn-error.log*
 storage/uploads/
 backend/storage/uploads/
 *.enc
+pgvector/
 

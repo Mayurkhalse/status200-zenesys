@@ -87,15 +87,17 @@ class ClassificationService:
 
     async def _call_ml_service(self, text: str, filename: str) -> Dict[str, Any]:
         try:
+            import os
+            clean_filename = filename if filename.endswith('.txt') else f"{os.path.splitext(filename)[0]}.txt"
             async with httpx.AsyncClient(timeout=5.0) as client:
                 res = await client.post(
                     f"{settings.ML_SERVICE_URL}/predict/upload",
-                    files={"file": (filename, text.encode('utf-8'), "text/plain")}
+                    files={"file": (clean_filename, text.encode('utf-8'), "text/plain")}
                 )
                 if res.status_code == 200:
                     return res.json()
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"ML service call note: {e}")
         return None
 
 classification_service = ClassificationService()

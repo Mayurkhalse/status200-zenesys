@@ -32,7 +32,7 @@ ALLOWED_MIME_TYPES = [
 async def upload_document(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    current_user: UserSession = Depends(require_roles(["admin", "analyst"]))
+    current_user: UserSession = Depends(get_current_user)
 ):
     if file.content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(
@@ -218,6 +218,12 @@ async def list_documents(
 ):
     db = get_mongo_db()
     query = {"is_deleted": False}
+
+    # Non-admin users only see documents they uploaded
+    if current_user.role != "admin":
+        user_id_val = ObjectId(current_user.user_id) if ObjectId.is_valid(current_user.user_id) else current_user.user_id
+        query["uploaded_by"] = user_id_val
+
     if status:
         query["status"] = status
     if document_type:
@@ -251,6 +257,10 @@ async def get_document(document_id: str, current_user: UserSession = Depends(get
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
+    # Access control check
+    if current_user.role != "admin" and str(doc["uploaded_by"]) != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: You do not have permission to view this document")
+
     return DocumentItem(
         document_id=str(doc["_id"]),
         filename=doc["filename"],
@@ -271,6 +281,9 @@ async def get_document_status(document_id: str, current_user: UserSession = Depe
     doc = await db.documents.find_one({"_id": ObjectId(document_id)})
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    if current_user.role != "admin" and str(doc["uploaded_by"]) != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: Access denied")
 
     decision = doc.get("classification", {}).get("decision") if doc.get("classification") else None
     return DocumentStatusResponse(

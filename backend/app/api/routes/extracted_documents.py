@@ -13,6 +13,14 @@ router = APIRouter(prefix="/extracted-documents", tags=["Extracted Documents"])
 @router.get("/{document_id}", response_model=ExtractedDocumentItem)
 async def get_extracted_document(document_id: str, current_user: UserSession = Depends(get_current_user)):
     db = get_mongo_db()
+
+    # Check parent document ownership
+    doc = await db.documents.find_one({"_id": ObjectId(document_id)})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if current_user.role != "admin" and str(doc["uploaded_by"]) != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: You do not have permission to view this document")
+
     extracted = await db.extracted_documents.find_one({"document_id": ObjectId(document_id)})
     if not extracted:
         raise HTTPException(status_code=404, detail="Extracted document record not found")
@@ -21,7 +29,6 @@ async def get_extracted_document(document_id: str, current_user: UserSession = D
     fields = encryption_service.decrypt_field(extracted["fields"]) if isinstance(extracted["fields"], str) else extracted["fields"]
 
     # Remap PII tokens if user is admin or analyst
-    doc = await db.documents.find_one({"_id": ObjectId(document_id)})
     if doc and doc.get("pii_redaction_map_ref") and current_user.role in ["admin", "analyst"]:
         redaction_map = encryption_service.decrypt_field(doc["pii_redaction_map_ref"])
         if redaction_map:
@@ -48,9 +55,13 @@ async def update_extracted_document(
     current_user: UserSession = Depends(require_roles(["admin", "analyst"]))
 ):
     db = get_mongo_db()
-    extracted = await db.extracted_documents.find_one({"document_id": ObjectId(document_id)})
-    if not extracted:
-        raise HTTPException(status_code=404, detail="Extracted document record not found")
+
+    # Check parent document ownership
+    doc = await db.documents.find_one({"_id": ObjectId(document_id)})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if current_user.role != "admin" and str(doc["uploaded_by"]) != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: You do not have permission to modify this document")
 
     # Re-encrypt fields
     encrypted_fields = encryption_service.encrypt_field(req.fields)

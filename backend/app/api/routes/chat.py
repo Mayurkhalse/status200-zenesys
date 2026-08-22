@@ -10,6 +10,7 @@ from app.models.schemas.chat import (
 )
 from app.services.retrieval_service import retrieval_service
 from app.services.llm_service import llm_service
+from app.agents.rag.rag_agent import rag_reasoning_agent
 
 router = APIRouter(prefix="/chat", tags=["RAG Chatbot"])
 
@@ -60,60 +61,16 @@ async def send_chat_message(
     req: ChatMessageRequest,
     current_user: UserSession = Depends(get_current_user)
 ):
-    db = get_mongo_db()
-    sess_oid = ObjectId(session_id)
-    sess = await db.chat_sessions.find_one({
-        "_id": sess_oid,
-        "user_id": ObjectId(current_user.user_id)
-    })
-    if not sess:
-        raise HTTPException(status_code=404, detail="Chat session not found")
-
-    now = datetime.now(timezone.utc)
-    user_msg_entry = {
-        "role": "user",
-        "content": req.content,
-        "source_document_ids": [],
-        "retrieval_method": None,
-        "created_at": now
-    }
-
-    # Run hybrid retrieval
-    source_doc_ids, context_str = await retrieval_service.hybrid_search(req.content, top_k=5)
-
-    prompt = f"""You are an ERP Document Intelligence AI Assistant. Answer the user's question accurately based ONLY on the document context provided below. Always cite relevant document IDs if applicable.
-
-CONTEXT FROM DOCUMENTS:
-{context_str}
-
-USER QUESTION:
-{req.content}
-
-ANSWER:"""
-
-    assistant_answer = await llm_service.generate_completion(prompt)
-    if not assistant_answer or assistant_answer == "{}":
-        assistant_answer = f"Based on available document records, here is the context matching your query:\n\n{context_str[:500]}"
-
-    assistant_msg_entry = {
-        "role": "assistant",
-        "content": assistant_answer,
-        "source_document_ids": source_doc_ids,
-        "retrieval_method": "hybrid",
-        "created_at": datetime.now(timezone.utc)
-    }
-
-    await db.chat_sessions.update_one(
-        {"_id": sess_oid},
-        {
-            "$push": {"messages": {"$each": [user_msg_entry, assistant_msg_entry]}},
-            "$set": {"updated_at": datetime.now(timezone.utc)}
-        }
+    res = await rag_reasoning_agent.process_query(
+        session_id=session_id,
+        query=req.content,
+        user_id=current_user.user_id
     )
 
     return ChatMessageResponse(
         role="assistant",
-        content=assistant_answer,
-        source_document_ids=source_doc_ids,
-        retrieval_method="hybrid"
+        content=res["content"],
+        source_document_ids=res["source_document_ids"],
+        retrieval_method=res["retrieval_method"],
+        created_at=res["created_at"]
     )

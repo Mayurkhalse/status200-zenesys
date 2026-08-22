@@ -21,13 +21,13 @@ class InsightAgent:
         with open(PROMPT_PATH, "r", encoding="utf-8") as f:
             template = f.read()
 
-        prompt = template.format(
-            document_type=document_type,
-            extracted_fields_json=json.dumps(extracted_fields, indent=2),
-            related_entity=related_entity or "Unknown Entity",
-            n=len(history),
-            history_json=json.dumps(history, indent=2, default=str),
-            aggregate_stats_json=json.dumps(aggregate_stats, indent=2, default=str)
+        prompt = (
+            template.replace("{document_type}", str(document_type))
+            .replace("{extracted_fields_json}", json.dumps(extracted_fields, indent=2))
+            .replace("{related_entity}", str(related_entity or "Unknown Entity"))
+            .replace("{n}", str(len(history)))
+            .replace("{history_json}", json.dumps(history, indent=2, default=str))
+            .replace("{aggregate_stats_json}", json.dumps(aggregate_stats, indent=2, default=str))
         )
 
         insights = await llm_service.generate_json(prompt)

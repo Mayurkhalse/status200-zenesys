@@ -33,8 +33,12 @@ class OCRService:
             full_text = "\n".join(extracted_text)
             return {"text": full_text, "method": "pymupdf", "page_count": len(doc)}
         except Exception as e:
-            print(f"PyMuPDF parsing failed: {e}")
-            return {"text": "", "method": "pymupdf_failed"}
+            print(f"PyMuPDF parsing note: {e}")
+            try:
+                text = file_bytes.decode('utf-8', errors='ignore')
+                return {"text": text, "method": "pdf_text_fallback"}
+            except Exception:
+                return {"text": "", "method": "pymupdf_failed"}
 
     def _parse_docx(self, file_bytes: bytes) -> Dict[str, Any]:
         try:
