@@ -60,14 +60,20 @@ Correct the JSON fields strictly adhering to the valid schema. Return ONLY valid
         if not isinstance(extracted_data, dict):
             extracted_data = {}
 
+        # Fallback to rule-based regex field extraction if LLM output is empty {}
+        if not extracted_data or len(extracted_data) == 0:
+            extracted_data = self._rule_based_fallback_extraction(redacted_text)
+
         # Step 2: Schema Validation
         is_valid, errors = self.validate_schema(extracted_data)
 
         # Step 3: Self-Reflection loop if validation failed
         reflection_applied = False
-        if not is_valid:
-            extracted_data = await self.reflect_and_correct(redacted_text, extracted_data, errors)
-            reflection_applied = True
+        if not is_valid and len(errors) > 0 and extracted_data:
+            reflected = await self.reflect_and_correct(redacted_text, extracted_data, errors)
+            if isinstance(reflected, dict) and reflected:
+                extracted_data = reflected
+                reflection_applied = True
 
         # Step 4: Field-level confidence scores
         confidences = {}
@@ -125,3 +131,41 @@ Correct the JSON fields strictly adhering to the valid schema. Return ONLY valid
             await db.agent_traces.insert_one(trace_doc)
         except Exception as e:
             print(f"Agent trace logging note: {e}")
+
+    def _rule_based_fallback_extraction(self, text: str) -> Dict[str, Any]:
+        """Regex and string heuristic extraction fallback for financial/business document fields."""
+        import re
+        data = {}
+
+        # 1. Total / Amount pattern
+        total_match = re.search(r'(?:total|amount|grand total|subtotal|due)[:\s]*\$?\s*([0-9,]+\.[0-9]{2})', text, re.IGNORECASE)
+        if total_match:
+            try:
+                data["total"] = float(total_match.group(1).replace(",", ""))
+            except Exception:
+                pass
+
+        # 2. Document / Invoice / PO Number pattern
+        number_match = re.search(r'(?:inv|invoice|po|order|quote|so|receipt)[#\s:\.-]*([a-z0-9-]+)', text, re.IGNORECASE)
+        if number_match:
+            num = number_match.group(1).strip()
+            if len(num) >= 2:
+                data["invoice_number"] = num
+                data["po_number"] = num
+
+        # 3. Vendor / Merchant / Party pattern
+        vendor_match = re.search(r'(?:vendor|merchant|from|company|biller|supplier)[:\s]*([^\n\r,]+)', text, re.IGNORECASE)
+        if vendor_match:
+            data["vendor"] = vendor_match.group(1).strip()
+        else:
+            lines = [l.strip() for l in text.split('\n') if l.strip()]
+            if lines:
+                data["vendor"] = lines[0][:40]
+
+        # 4. Dates pattern
+        date_match = re.search(r'(\d{4}-\d{2}-\d{2}|\d{1,2}/\d{1,2}/\d{4})', text)
+        if date_match:
+            data["issue_date"] = date_match.group(1)
+
+        data["currency"] = "USD"
+        return data
