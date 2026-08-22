@@ -1,0 +1,14 @@
+{
+  "task": "Task B Specialized Extraction - Invoice",
+  "version": "1.0.0",
+  "status": "architecture_groundwork",
+  "fields": [
+    "invoice_number",
+    "invoice_date",
+    "company_name",
+    "counterparty_name",
+    "total_amount",
+    "currency"
+  ],
+  "model_type": "rule_based_v1"
+}

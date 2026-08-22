@@ -1,0 +1,44 @@
+# Canonical Paths Config
+root_dir: "."
+dataset:
+  raw_dir: "dataset/raw"
+  synthetic_csv: "dataset/synthetic_data.csv"
+  metadata_jsonl: "dataset/metadata.jsonl"
+  ground_truth_dir: "dataset/extraction_ground_truth"
+  splits_dir: "dataset/splits"
+  train_csv: "dataset/splits/train.csv"
+  val_csv: "dataset/splits/validation.csv"
+  test_csv: "dataset/splits/test.csv"
+
+features:
+  cache_dir: "features/cache"
+  tfidf_matrix: "features/cache/tfidf_matrix.npz"
+  embeddings_npy: "features/cache/embeddings.npy"
+  domain_parquet: "features/cache/domain_indicator_features.parquet"
+  doc_stats_parquet: "features/cache/document_statistics.parquet"
+  layout_parquet: "features/cache/layout_features.parquet"
+  manifest: "features/feature_manifest.json"
+
+models:
+  classifier_dir: "models/document_classifier"
+  ensemble_pkl: "models/document_classifier/ensemble.pkl"
+  xgboost_pkl: "models/document_classifier/xgboost_model.pkl"
+  svm_pkl: "models/document_classifier/svm_model.pkl"
+  random_forest_pkl: "models/document_classifier/random_forest.pkl"
+  lightgbm_pkl: "models/document_classifier/lightgbm_model.pkl"
+  logistic_pkl: "models/document_classifier/logistic_regression.pkl"
+  tfidf_vectorizer_pkl: "models/document_classifier/tfidf_vectorizer.pkl"
+  embedding_model_ref: "models/document_classifier/embedding_model_ref.json"
+  label_encoder_pkl: "models/document_classifier/label_encoder.pkl"
+  scaler_pkl: "models/document_classifier/scaler.pkl"
+  calibration_pkl: "models/document_classifier/calibration.pkl"
+  metadata_json: "models/document_classifier/metadata.json"
+
+reports:
+  reports_dir: "reports"
+  evaluation_pdf: "reports/evaluation_report.pdf"
+  confusion_matrix_png: "reports/confusion_matrix.png"
+  calibration_curve_png: "reports/calibration_curve.png"
+  feature_importance_png: "reports/feature_importance.png"
+  model_comparison_csv: "reports/model_comparison_table.csv"
+  error_analysis_csv: "reports/error_analysis.csv"

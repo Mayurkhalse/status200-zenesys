@@ -1,0 +1,56 @@
+# Synthetic Document Generation Config
+documents_per_class: 100
+generator_version: "1.0.0"
+formats: ["pdf", "docx", "png"]
+scanned_style_ratio: 0.3
+
+document_classes:
+  - BUSINESS_INVOICE
+  - PURCHASE_ORDER
+  - SALES_ORDER
+  - QUOTATION
+  - PROPOSAL
+  - CONTRACT
+  - LEAD
+  - RECEIPT
+  - DELIVERY_NOTE
+  - CREDIT_NOTE
+  - DEBIT_NOTE
+  - PAYMENT_RECEIPT
+  - RFQ
+  - OTHER
+
+industries:
+  - IT_SERVICES
+  - MANUFACTURING
+  - RETAIL
+  - HEALTHCARE
+  - CONSTRUCTION
+  - LOGISTICS
+  - CONSULTING
+  - EDUCATION
+  - AUTOMOTIVE
+  - FINANCE
+  - ECOMMERCE
+  - WHOLESALE
+
+currencies:
+  - INR
+  - USD
+  - EUR
+  - GBP
+
+countries:
+  - India
+  - United States
+  - United Kingdom
+  - Germany
+  - Singapore
+
+degradation_types:
+  - blur
+  - noise
+  - rotation
+  - skew
+  - brightness
+  - compression

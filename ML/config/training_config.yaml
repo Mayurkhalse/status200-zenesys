@@ -1,0 +1,45 @@
+# Training Config
+models:
+  - logistic_regression
+  - linear_svm
+  - xgboost
+  - random_forest
+  - lightgbm
+
+hyperparameters:
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
+    solver: "lbfgs"
+  linear_svm:
+    C: 1.0
+    loss: "squared_hinge"
+    max_iter: 2000
+  xgboost:
+    n_estimators: 150
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+  random_forest:
+    n_estimators: 150
+    max_depth: 12
+    random_state: 42
+  lightgbm:
+    n_estimators: 150
+    learning_rate: 0.1
+    num_leaves: 31
+    random_state: 42
+
+ensemble:
+  selection_metric: "macro_f1"
+  voting: "soft"
+  top_n: 3
+
+calibration:
+  method: "isotonic"  # 'isotonic' or 'sigmoid'
+
+confidence_thresholds:
+  high: 0.85
+  medium: 0.60

@@ -1,0 +1,122 @@
+# Feature Engineering Config
+tfidf:
+  ngram_range: [1, 2]
+  max_features: 10000
+  sublinear_tf: true
+  lowercase: true
+
+embeddings:
+  model_id: "BAAI/bge-small-en-v1.5"
+  batch_size: 32
+  use_gpu: false
+  dimension: 384
+
+domain_keywords:
+  BUSINESS_INVOICE:
+    - invoice
+    - tax invoice
+    - bill to
+    - invoice number
+    - due date
+    - subtotal
+    - total amount
+    - gst
+    - vat
+    - payment terms
+  PURCHASE_ORDER:
+    - purchase order
+    - po number
+    - vendor
+    - ship to
+    - order date
+    - delivery date
+    - item description
+    - quantity
+    - unit price
+  SALES_ORDER:
+    - sales order
+    - so number
+    - customer order
+    - sales representative
+    - order summary
+    - payment method
+  QUOTATION:
+    - quotation
+    - quote number
+    - estimate
+    - quote valid until
+    - pricing proposal
+    - unit cost
+  PROPOSAL:
+    - project proposal
+    - executive summary
+    - scope of work
+    - deliverables
+    - methodology
+    - project timeline
+    - commercial terms
+  CONTRACT:
+    - master service agreement
+    - contract agreement
+    - party of the first part
+    - jurisdiction
+    - termination clause
+    - indemnity
+    - confidentiality
+    - effective date
+  LEAD:
+    - lead capture
+    - prospect details
+    - contact person
+    - lead status
+    - lead source
+    - budget estimate
+    - interest level
+  RECEIPT:
+    - receipt
+    - transaction id
+    - paid in full
+    - change due
+    - cashier
+    - store number
+    - payment received
+  DELIVERY_NOTE:
+    - delivery note
+    - consignment note
+    - dispatch slip
+    - goods received
+    - carrier name
+    - tracking number
+    - package count
+  CREDIT_NOTE:
+    - credit note
+    - credit memo
+    - refund reference
+    - original invoice ref
+    - credited amount
+    - adjustment
+  DEBIT_NOTE:
+    - debit note
+    - debit memo
+    - undercharged amount
+    - additional charge
+    - supplier debit
+  PAYMENT_RECEIPT:
+    - payment confirmation
+    - receipt voucher
+    - payment reference
+    - remitted amount
+    - bank reference
+    - payment mode
+  RFQ:
+    - request for quotation
+    - rfq number
+    - submission deadline
+    - technical requirements
+    - bidding instructions
+  OTHER:
+    - general correspondence
+    - memo
+    - notice
+    - announcement
+    - report

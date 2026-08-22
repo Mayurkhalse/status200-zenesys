@@ -1,0 +1,41 @@
+{
+  "num_documents": 1400,
+  "feature_groups": {
+    "tfidf": {
+      "shape": [
+        1400,
+        10000
+      ],
+      "file": "features/cache/tfidf_matrix.npz"
+    },
+    "embeddings": {
+      "shape": [
+        1400,
+        384
+      ],
+      "file": "features/cache/embeddings.npy"
+    },
+    "domain_indicators": {
+      "shape": [
+        1400,
+        94
+      ],
+      "file": "features/cache/domain_indicator_features.parquet"
+    },
+    "document_statistics": {
+      "shape": [
+        1400,
+        7
+      ],
+      "file": "features/cache/document_statistics.parquet"
+    },
+    "layout": {
+      "shape": [
+        1400,
+        4
+      ],
+      "file": "features/cache/layout_features.parquet"
+    }
+  },
+  "created_at": "2026-08-22T12:09:44.561797"
+}

@@ -1,0 +1,66 @@
+# ==========================================
+# ERP Document Classification ML - .gitignore
+# ==========================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Pytest / Test Caching
+.pytest_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+.gemini/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Feature Cache Artifacts (large matrix caches)
+features/cache/*.npz
+features/cache/*.npy
+features/cache/*.parquet
+
+# Trained Model Artifacts (keep metadata.json, ignore binary pickles if large)
+# Un-comment the line below if you prefer not to commit model pickle binaries to Git:
+# models/**/*.pkl
+
+# Synthetic Dataset Generated Files (excluded from git)
+dataset/raw/
+dataset/synthetic_data.csv
+dataset/metadata.jsonl
+dataset/splits/
+dataset/extraction_ground_truth/
+
+# Log Files & Environment Variables
+*.log
+.env
+.env.local
