@@ -141,7 +141,11 @@ export default function RecordsList({ globalSearch = '', setGlobalSearch }) {
               Master ledger transactions and automated document pipeline records
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.78rem', background: '#e0f2fe', color: '#0369a1', padding: '0.3rem 0.6rem', borderRadius: '6px', fontWeight: '600', border: '1px solid #bae6fd', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0284c7' }}></span>
+              Oracle NetSuite SuiteTalk TBA
+            </span>
             <button onClick={handleSeedData} className="btn-erp-action btn-erp-primary" disabled={seeding} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Plus size={15} />
               <span>{seeding ? 'Seeding DB...' : 'Seed Baseline ERP Data'}</span>

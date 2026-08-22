@@ -5,7 +5,10 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.db.database import init_db
-from app.api.routes import auth, documents, extracted_documents, insights, dashboard, erp, chat
+from app.api.routes import (
+    auth, documents, extracted_documents, insights, 
+    dashboard, erp, chat, netsuite, netsuite_webhooks
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -51,6 +54,8 @@ app.include_router(insights.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(erp.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
+app.include_router(netsuite.router, prefix="/api")
+app.include_router(netsuite_webhooks.router, prefix="/api")
 
 @app.get("/api/health")
 async def health_check():

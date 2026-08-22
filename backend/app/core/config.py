@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     ML_SERVICE_URL: str = "http://127.0.0.1:8000"
 
+    # Oracle NetSuite SuiteTalk TBA Credentials
+    NETSUITE_ACCOUNT_ID: str = "TSTDRV123456"
+    NETSUITE_CONSUMER_KEY: str = "netsuite_consumer_key_placeholder"
+    NETSUITE_CONSUMER_SECRET: str = "netsuite_consumer_secret_placeholder"
+    NETSUITE_TOKEN_ID: str = "netsuite_token_id_placeholder"
+    NETSUITE_TOKEN_SECRET: str = "netsuite_token_secret_placeholder"
+    NETSUITE_REST_URL: str = "https://tstdrv123456.suitetalk.api.netsuite.com/services/rest/record/v1"
+
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"),
         env_file_encoding="utf-8",

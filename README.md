@@ -1,4 +1,4 @@
-# DocIntel — AI-Powered Document Intelligence for ERP Platforms
+# Intelliparse — AI-Powered Document Intelligence for ERP Platforms
 
 > An intelligent document processing pipeline that ingests unstructured business documents, classifies and routes them through specialized AI agents, and surfaces actionable insights, risks, trends, and anomalies on a real-time dashboard.
 

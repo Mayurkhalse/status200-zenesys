@@ -14,12 +14,14 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 async def get_dashboard_kpis(current_user: UserSession = Depends(get_current_user)):
     db = get_mongo_db()
 
-    doc_filter = {"is_deleted": False}
+    doc_filter = {"is_deleted": {"$ne": True}}
     user_doc_ids = []
 
     if current_user.role != "admin":
-        user_id_val = ObjectId(current_user.user_id) if ObjectId.is_valid(current_user.user_id) else current_user.user_id
-        doc_filter["uploaded_by"] = user_id_val
+        user_id_val = [current_user.user_id]
+        if ObjectId.is_valid(current_user.user_id):
+            user_id_val.append(ObjectId(current_user.user_id))
+        doc_filter["uploaded_by"] = {"$in": user_id_val}
         user_doc_ids = await db.documents.distinct("_id", doc_filter)
 
     total_processed = await db.documents.count_documents(doc_filter)
@@ -78,10 +80,12 @@ async def get_dashboard_trends(
     db = get_mongo_db()
     series = []
 
-    match_stage = {"is_deleted": False}
+    match_stage = {"is_deleted": {"$ne": True}}
     if current_user.role != "admin":
-        user_id_val = ObjectId(current_user.user_id) if ObjectId.is_valid(current_user.user_id) else current_user.user_id
-        match_stage["uploaded_by"] = user_id_val
+        user_id_val = [current_user.user_id]
+        if ObjectId.is_valid(current_user.user_id):
+            user_id_val.append(ObjectId(current_user.user_id))
+        match_stage["uploaded_by"] = {"$in": user_id_val}
 
     if metric == "spend_by_vendor":
         pipeline = [

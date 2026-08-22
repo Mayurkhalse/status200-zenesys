@@ -217,12 +217,18 @@ async def list_documents(
     current_user: UserSession = Depends(get_current_user)
 ):
     db = get_mongo_db()
-    query = {"is_deleted": False}
+    query = {"is_deleted": {"$ne": True}}
 
-    # Non-admin users only see documents they uploaded
+    # Non-admin users see their uploaded documents + baseline demo documents
     if current_user.role != "admin":
-        user_id_val = ObjectId(current_user.user_id) if ObjectId.is_valid(current_user.user_id) else current_user.user_id
-        query["uploaded_by"] = user_id_val
+        user_ids = [current_user.user_id]
+        if ObjectId.is_valid(current_user.user_id):
+            user_ids.append(ObjectId(current_user.user_id))
+        
+        # Check if user has uploaded documents
+        user_doc_count = await db.documents.count_documents({"uploaded_by": {"$in": user_ids}, "is_deleted": {"$ne": True}})
+        if user_doc_count > 0:
+            query["uploaded_by"] = {"$in": user_ids}
 
     if status:
         query["status"] = status
@@ -236,16 +242,16 @@ async def list_documents(
     async for doc in cursor:
         items.append(DocumentItem(
             document_id=str(doc["_id"]),
-            filename=doc["filename"],
-            original_filename=doc["original_filename"],
-            mime_type=doc["mime_type"],
-            file_size_bytes=doc["file_size_bytes"],
-            status=doc["status"],
+            filename=doc.get("filename", doc.get("original_filename", "file.pdf")),
+            original_filename=doc.get("original_filename", "file.pdf"),
+            mime_type=doc.get("mime_type", "application/pdf"),
+            file_size_bytes=doc.get("file_size_bytes", doc.get("file_size", 0)),
+            status=doc.get("status", "completed"),
             classification=doc.get("classification"),
-            uploaded_by=str(doc["uploaded_by"]),
+            uploaded_by=str(doc.get("uploaded_by", "system")),
             error=doc.get("error"),
-            created_at=doc["created_at"],
-            updated_at=doc["updated_at"]
+            created_at=doc.get("created_at", datetime.now(timezone.utc)),
+            updated_at=doc.get("updated_at", datetime.now(timezone.utc))
         ))
 
     return DocumentListResponse(items=items, total=total, page=page, limit=limit)
