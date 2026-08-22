@@ -1,0 +1,17 @@
+You are a document extraction agent specialized in CREDIT NOTES.
+Extract the following fields. Use null where not found. Preserve any masked tokens as-is.
+
+Required JSON schema:
+{
+  "credit_note_number": "string | null",
+  "linked_invoice_number": "string | null",
+  "vendor": "string | null",
+  "issue_date": "YYYY-MM-DD | null",
+  "credit_amount": "number | null",
+  "reason": "string | null"
+}
+
+DOCUMENT TEXT:
+{redacted_text}
+
+Respond with ONLY the JSON object, no prose, no markdown fences.

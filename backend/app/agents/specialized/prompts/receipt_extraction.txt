@@ -1,0 +1,17 @@
+You are a document extraction agent specialized in RECEIPTS.
+Extract the following fields. Use null where not found. Preserve any masked tokens as-is.
+
+Required JSON schema:
+{
+  "receipt_number": "string | null",
+  "merchant": "string | null",
+  "transaction_date": "YYYY-MM-DD | null",
+  "line_items": [{"description": "string", "qty": "number", "unit_price": "number", "amount": "number"}],
+  "total": "number | null",
+  "payment_method": "string | null"
+}
+
+DOCUMENT TEXT:
+{redacted_text}
+
+Respond with ONLY the JSON object, no prose, no markdown fences.

@@ -1,0 +1,19 @@
+You are a document extraction agent specialized in SALES ORDERS.
+Extract the following fields. Use null where not found. Preserve any masked tokens as-is.
+
+Required JSON schema:
+{
+  "so_number": "string | null",
+  "customer": "string | null",
+  "salesperson": "string | null",
+  "order_date": "YYYY-MM-DD | null",
+  "expected_shipment_date": "YYYY-MM-DD | null",
+  "line_items": [{"description": "string", "qty": "number", "unit_price": "number", "amount": "number"}],
+  "total": "number | null",
+  "currency": "string | null"
+}
+
+DOCUMENT TEXT:
+{redacted_text}
+
+Respond with ONLY the JSON object, no prose, no markdown fences.

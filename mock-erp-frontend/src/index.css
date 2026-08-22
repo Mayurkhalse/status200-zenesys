@@ -1,0 +1,37 @@
+:root {
+  --bg-erp: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary-erp: #1e40af;
+  --border-erp: #e2e8f0;
+  --font-family: 'Inter', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-family); background-color: var(--bg-erp); color: var(--text-main); min-height: 100vh; }
+
+.navbar-erp {
+  background-color: var(--primary-erp);
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+.card-erp { background: #fff; border: 1px solid var(--border-erp); border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+
+.table-erp { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.table-erp th, .table-erp td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-erp); }
+.table-erp th { background: #f1f5f9; color: #475569; font-size: 0.8rem; text-transform: uppercase; }
+
+.badge-erp { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+.badge-seed { background: #e0f2fe; color: #0369a1; }
+.badge-pipeline { background: #f0fdf4; color: #15803d; }
+
+.btn-erp { padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; }
+.btn-approve { background: #16a34a; color: #fff; }
+.btn-reject { background: #dc2626; color: #fff; }
+.btn-pay { background: #2563eb; color: #fff; }

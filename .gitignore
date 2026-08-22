@@ -64,3 +64,21 @@ dataset/extraction_ground_truth/
 *.log
 .env
 .env.local
+
+# Node.js & Frontend Dependencies
+node_modules/
+**/node_modules/
+dist/
+build/
+.next/
+*.tsbuildinfo
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Upload Storage & Local File Artifacts
+storage/uploads/
+backend/storage/uploads/
+*.enc
+

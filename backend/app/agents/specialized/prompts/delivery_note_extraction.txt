@@ -1,0 +1,17 @@
+You are a document extraction agent specialized in DELIVERY NOTES.
+Extract the following fields. Use null where not found. Preserve any masked tokens as-is.
+
+Required JSON schema:
+{
+  "delivery_note_number": "string | null",
+  "linked_po_number": "string | null",
+  "vendor": "string | null",
+  "delivery_date": "YYYY-MM-DD | null",
+  "line_items": [{"description": "string", "qty_shipped": "number"}],
+  "received_by": "string | null"
+}
+
+DOCUMENT TEXT:
+{redacted_text}
+
+Respond with ONLY the JSON object, no prose, no markdown fences.
